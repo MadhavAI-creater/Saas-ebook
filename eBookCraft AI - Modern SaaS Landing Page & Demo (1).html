@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBookCraft AI - Write, Design & Publish eBooks in Minutes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            violet: '#8b5cf6',
+                            rose: '#f43f5e'
+                        },
+                        dark: {
+                            bg: '#090d16',
+                            card: '#111827',
+                            border: '#1f2937',
+                            hover: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        mono: ['"Fira Code"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090d16;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-alt {
+            background: linear-gradient(135deg, #f472b6 0%, #c084fc 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+
+        /* Animated Grid Background */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Glowing Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .tab-btn.active {
+            background-color: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .page-flip-container {
+            perspective: 1000px;
+        }
+        .page-view {
+            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-100 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 text-xs text-indigo-200 py-2 px-4 text-center border-b border-indigo-800/40 relative z-50">
+        <span class="inline-flex items-center gap-2">
+            <span class="bg-brand-500 text-white font-bold text-[10px] uppercase px-2 py-0.5 rounded-full">New v3.2</span>
+            <span>AI eBook Multi-Format Publisher with Amazon Kindle KDP Integration is live!</span>
+            <a href="#demo" class="underline hover:text-white font-medium transition-colors">Try Live Demo &rarr;</a>
+        </span>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                    <i data-lucide="book-open-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
+                        eBookCraft<span class="gradient-text">.AI</span>
+                    </span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+                <a href="#features" class="hover:text-brand-500 transition-colors">Features</a>
+                <a href="#demo" class="hover:text-brand-500 transition-colors flex items-center gap-1">
+                    <span>Live Demo</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </a>
+                <a href="#templates" class="hover:text-brand-500 transition-colors">Templates</a>
+                <a href="#pricing" class="hover:text-brand-500 transition-colors">Pricing</a>
+                <a href="#faqs" class="hover:text-brand-500 transition-colors">FAQ</a>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="hidden sm:flex items-center gap-4">
+                <button onclick="openModal('loginModal')" class="text-sm font-semibold text-gray-300 hover:text-white transition-colors px-3 py-2">
+                    Sign In
+                </button>
+                <a href="#demo" class="gradient-bg text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 hover:opacity-90 hover:shadow-indigo-500/40 transition-all flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <span>Create Free eBook</span>
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn" class="md:hidden text-gray-400 hover:text-white p-2">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-gray-800 bg-dark-bg/95 backdrop-blur-xl px-4 py-6 space-y-4">
+            <a href="#features" class="block text-gray-300 hover:text-white font-medium py-1">Features</a>
+            <a href="#demo" class="block text-gray-300 hover:text-white font-medium py-1">Interactive Demo</a>
+            <a href="#templates" class="block text-gray-300 hover:text-white font-medium py-1">Templates</a>
+            <a href="#pricing" class="block text-gray-300 hover:text-white font-medium py-1">Pricing</a>
+            <a href="#faqs" class="block text-gray-300 hover:text-white font-medium py-1">FAQ</a>
+            <div class="pt-4 border-t border-gray-800 flex flex-col gap-3">
+                <button onclick="openModal('loginModal')" class="w-full text-center py-2.5 text-sm font-semibold text-gray-300 border border-gray-700 rounded-xl">Sign In</button>
+                <a href="#demo" class="w-full text-center gradient-bg text-white py-2.5 rounded-xl text-sm font-semibold shadow-md">Create Free eBook</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden bg-grid-pattern">
+        <!-- Glow Orbs -->
+        <div class="glow-orb w-96 h-96 bg-brand-600 top-10 -left-20"></div>
+        <div class="glow-orb w-96 h-96 bg-accent-violet top-40 -right-20"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-4xl mx-auto space-y-6">
+                
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-indigo-300 text-xs font-semibold uppercase tracking-wider">
+                    <i data-lucide="wand-2" class="w-4 h-4 text-brand-500"></i>
+                    <span>Next-Gen Generative Publishing Engine</span>
+                </div>
+
+                <!-- Main Heading -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight">
+                    Turn Simple Ideas into <br>
+                    <span class="gradient-text">Bestselling eBooks & Lead Magnets</span>
+                    <br>in Minutes
+                </h1>
+
+                <!-- Subheading -->
+                <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-normal leading-relaxed">
+                    Generate structured outlines, write full-length high-converting chapters, auto-style beautiful layouts, and design stunning covers. Export directly to EPUB, PDF, and Kindle.
+                </p>
+
+                <!-- Hero CTA Controls -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="#demo" class="w-full sm:w-auto px-8 py-4 gradient-bg text-white text-base font-bold rounded-xl shadow-xl shadow-indigo-600/30 hover:scale-105 hover:shadow-indigo-600/50 transition-all flex items-center justify-center gap-3">
+                        <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                        <span>Start Generating Free</span>
+                    </a>
+                    <a href="#videoModal" onclick="openModal('videoModal')" class="w-full sm:w-auto px-8 py-4 glass-card text-white text-base font-semibold rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="play-circle" class="w-5 h-5 text-brand-500"></i>
+                        <span>Watch 2-Min Demo</span>
+                    </a>
+                </div>
+
+                <!-- Social Proof Badges -->
+                <div class="pt-8 flex flex-wrap items-center justify-center gap-6 text-gray-400 text-xs font-medium">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                        <span>No Writing Experience Required</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Full Commercial Rights Included</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Export Ready for KDP & Apple Books</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Floating Interactive Simulator -->
+                <div class="pt-10">
+                    <div class="glass-panel rounded-2xl p-4 sm:p-6 shadow-2xl border border-gray-700/60 max-w-3xl mx-auto text-left relative overflow-hidden">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                                <span class="text-xs text-gray-400 font-mono ml-2">Quick Prompt Preview Studio</span>
+                            </div>
+                            <span class="text-xs text-brand-500 font-semibold bg-brand-500/10 px-2 py-1 rounded">AI v3.2 Active</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3 bg-dark-bg/80 p-3 rounded-xl border border-gray-800">
+                                <i data-lucide="sparkles" class="w-5 h-5 text-brand-500 animate-spin"></i>
+                                <input type="text" id="heroPromptInput" value="The Ultimate AI Growth Playbook for SaaS Founders in 2026" class="bg-transparent text-sm text-gray-200 w-full focus:outline-none font-mono" readonly>
+                                <button onclick="quickGenerateHero()" class="px-4 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs font-semibold text-white rounded-lg transition-colors shrink-0">
+                                    Simulate
+                                </button>
+                            </div>
+
+                            <!-- Live AI Generation Stream Log -->
+                            <div id="heroStreamOutput" class="bg-dark-card/90 rounded-xl p-4 font-mono text-xs text-gray-300 space-y-2 border border-gray-800 h-32 overflow-y-auto">
+                                <p class="text-gray-500">// Enter or choose prompt above to watch real-time generation...</p>
+                                <p class="text-emerald-400">&gt; Prompt parsed: Target Audience: SaaS Founders &amp; Marketers</p>
+                                <p class="text-indigo-300">&gt; Generating 7 structured chapter outlines with target subtopics...</p>
+                                <p class="text-indigo-200">&gt; Auto-applying typography theme: 'Tech Blueprint Modern'...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS BANNER -->
+    <section class="border-y border-gray-800 bg-dark-card/50 py-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="space-y-1">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" id="stat1">125,000+</p>
+                    <p class="text-xs sm:text-sm text-gray-400 font-medium uppercase tracking-wider">eBooks Created</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-500 tracking-tight" id="stat2">$4.8M+</p>
+                    <p class="text-xs sm:text-sm text-gray-400 font-medium uppercase tracking-wider">Author Earnings</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">18 Mins</p>
+                    <p class="text-xs sm:text-sm text-gray-400 font-medium uppercase tracking-wider">Avg. Time-to-Publish</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-3xl sm:text-4xl font-extrabold text-emerald-400 tracking-tight">99.4%</p>
+                    <p class="text-xs sm:text-sm text-gray-400 font-medium uppercase tracking-wider">Formatting Accuracy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE DEMO BUILDER SECTION -->
+    <section id="demo" class="py-20 md:py-28 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 text-xs font-semibold">
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i> Live Interactive Sandbox
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                    Experience the <span class="gradient-text">eBookCraft Studio</span>
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base">
+                    Test drive our 4-step creation engine right now. No signup required to try.
+                </p>
+            </div>
+
+            <!-- Demo Container Box -->
+            <div class="glass-panel rounded-3xl border border-gray-700/70 overflow-hidden shadow-2xl">
+                
+                <!-- Wizard Navigation Tabs -->
+                <div class="border-b border-gray-800 bg-dark-bg/60 p-2 sm:p-4 grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs sm:text-sm font-semibold">
+                    <button id="stepBtn1" onclick="switchDemoStep(1)" class="tab-btn active py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all">
+                        <span class="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center text-xs">1</span>
+                        <span>Prompt &amp; Niche</span>
+                    </button>
+                    <button id="stepBtn2" onclick="switchDemoStep(2)" class="tab-btn py-3 px-4 rounded-xl text-gray-400 hover:text-white flex items-center justify-center gap-2 transition-all">
+                        <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">2</span>
+                        <span>AI Outline Studio</span>
+                    </button>
+                    <button id="stepBtn3" onclick="switchDemoStep(3)" class="tab-btn py-3 px-4 rounded-xl text-gray-400 hover:text-white flex items-center justify-center gap-2 transition-all">
+                        <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">3</span>
+                        <span>Cover &amp; Layout Studio</span>
+                    </button>
+                    <button id="stepBtn4" onclick="switchDemoStep(4)" class="tab-btn py-3 px-4 rounded-xl text-gray-400 hover:text-white flex items-center justify-center gap-2 transition-all">
+                        <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">4</span>
+                        <span>Export &amp; Reader Preview</span>
+                    </button>
+                </div>
+
+                <!-- Wizard Steps Content -->
+                <div class="p-6 sm:p-10 min-h-[480px]">
+
+                    <!-- STEP 1: PROMPT INPUT -->
+                    <div id="demoStep1" class="space-y-6">
+                        <div class="max-w-2xl mx-auto space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">What is your eBook about?</label>
+                                <input type="text" id="demoTitle" value="Mastering Prompt Engineering for Developers" class="w-full bg-dark-card border border-gray-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-500 transition-colors">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Category / Niche</label>
+                                    <select id="demoGenre" class="w-full bg-dark-card border border-gray-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-500">
+                                        <option value="Tech & Software">Tech &amp; Software</option>
+                                        <option value="Business & Finance">Business &amp; Finance</option>
+                                        <option value="Health & Fitness">Health &amp; Fitness</option>
+                                        <option value="Self Improvement">Self Improvement</option>
+                                        <option value="Cookbook & Recipes">Cookbook &amp; Recipes</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Writing Tone</label>
+                                    <select id="demoTone" class="w-full bg-dark-card border border-gray-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-500">
+                                        <option value="Authoritative & Practical">Authoritative &amp; Practical</option>
+                                        <option value="Casual & Conversational">Casual &amp; Conversational</option>
+                                        <option value="Academic & Detailed">Academic &amp; Detailed</option>
+                                        <option value="Motivational & Energetic">Motivational &amp; Energetic</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Target Reader Profile</label>
+                                <input type="text" id="demoAudience" value="Software Engineers, Tech Leads, and AI Enthusiasts" class="w-full bg-dark-card border border-gray-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-500">
+                            </div>
+
+                            <div class="pt-4 flex justify-end">
+                                <button onclick="generateOutlineFromStep1()" class="gradient-bg text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all flex items-center gap-2">
+                                    <span>Generate AI Outline</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: OUTLINE GENERATOR STUDIO -->
+                    <div id="demoStep2" class="hidden space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span>Generated Book Structure</span>
+                                    <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono">7 Chapters</span>
+                                </h3>
+                                <p class="text-xs text-gray-400">Drag to reorder, click to edit chapter titles, or add custom subtopics.</p>
+                            </div>
+                            <button onclick="addChapterRow()" class="px-3 py-1.5 glass-card text-brand-400 hover:text-white text-xs font-semibold rounded-lg flex items-center gap-1">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Chapter
+                            </button>
+                        </div>
+
+                        <!-- Chapters List -->
+                        <div id="chaptersList" class="space-y-3 max-h-[350px] overflow-y-auto pr-2">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+
+                        <div class="pt-4 flex justify-between items-center border-t border-gray-800">
+                            <button onclick="switchDemoStep(1)" class="text-xs font-semibold text-gray-400 hover:text-white">
+                                &larr; Back to Prompt
+                            </button>
+                            <button onclick="switchDemoStep(3)" class="gradient-bg text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2">
+                                <span>Proceed to Cover Designer</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: COVER DESIGN STUDIO -->
+                    <div id="demoStep3" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                            
+                            <!-- Cover Studio Controls -->
+                            <div class="lg:col-span-6 space-y-4">
+                                <h3 class="text-lg font-bold text-white">Cover Customization Studio</h3>
+                                
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">Preset Themes</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button onclick="applyCoverPreset('tech')" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-indigo-500/40 rounded-lg text-xs font-medium text-white">Tech Modern</button>
+                                        <button onclick="applyCoverPreset('minimal')" class="px-3 py-2 bg-zinc-900 hover:bg-zinc-800 border border-gray-700 rounded-lg text-xs font-medium text-white">Minimalist Dark</button>
+                                        <button onclick="applyCoverPreset('bold')" class="px-3 py-2 bg-amber-950/40 hover:bg-amber-900/40 border border-amber-700 rounded-lg text-xs font-medium text-white">Bold Warm</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">Cover Book Title</label>
+                                    <input type="text" id="coverTitleInput" oninput="updateCoverPreview()" value="Mastering Prompt Engineering" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-brand-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">Author Name</label>
+                                    <input type="text" id="coverAuthorInput" oninput="updateCoverPreview()" value="Alex Rivera" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-brand-500">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-400 mb-1">Accent Gradient</label>
+                                        <select id="coverGradientSelect" onchange="updateCoverPreview()" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-white text-xs">
+                                            <option value="from-indigo-600 to-purple-800">Indigo Royalty</option>
+                                            <option value="from-emerald-600 to-teal-900">Emerald Cyber</option>
+                                            <option value="from-rose-600 to-amber-700">Sunset Crimson</option>
+                                            <option value="from-slate-900 to-black">Midnight Monochrome</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-400 mb-1">Font Family</label>
+                                        <select id="coverFontSelect" onchange="updateCoverPreview()" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-white text-xs">
+                                            <option value="font-sans">Plus Jakarta Sans</option>
+                                            <option value="font-serif">Playfair Display Serif</option>
+                                            <option value="font-mono">Fira Code Mono</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live 3D-ish Book Preview Canvas -->
+                            <div class="lg:col-span-6 flex justify-center">
+                                <div id="coverBox" class="w-64 h-96 rounded-r-2xl rounded-l-md bg-gradient-to-br from-indigo-600 to-purple-800 p-6 flex flex-col justify-between shadow-2xl relative border-l-4 border-indigo-300/40 transition-all transform hover:rotate-1">
+                                    <div class="space-y-2">
+                                        <span class="text-[10px] uppercase tracking-widest text-indigo-200 font-semibold border-b border-indigo-300/20 pb-1 inline-block">eBookCraft Edition</span>
+                                        <h4 id="previewCoverTitle" class="text-xl font-extrabold text-white leading-tight font-sans">Mastering Prompt Engineering</h4>
+                                        <p id="previewCoverSubtitle" class="text-xs text-indigo-200">The Ultimate Practical Guide for Developers</p>
+                                    </div>
+
+                                    <div class="space-y-3">
+                                        <div class="w-10 h-10 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+                                            <i data-lucide="cpu" class="w-5 h-5 text-indigo-200"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] text-indigo-300 uppercase">Written By</p>
+                                            <p id="previewCoverAuthor" class="text-xs font-bold text-white">Alex Rivera</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="pt-4 flex justify-between items-center border-t border-gray-800">
+                            <button onclick="switchDemoStep(2)" class="text-xs font-semibold text-gray-400 hover:text-white">
+                                &larr; Back to Outline
+                            </button>
+                            <button onclick="switchDemoStep(4)" class="gradient-bg text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2">
+                                <span>Preview Page Reader &amp; Export</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: EXPORT & PAGE READER PREVIEW -->
+                    <div id="demoStep4" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            
+                            <!-- Reader Preview Controls -->
+                            <div class="lg:col-span-4 space-y-4">
+                                <h3 class="text-lg font-bold text-white">Export &amp; Reader Preview</h3>
+                                <p class="text-xs text-gray-400">Switch viewport modes to see how your generated book adapts seamlessly across PDF, EPUB, and Kindle formats.</p>
+
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-medium text-gray-300">Format Mode</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button onclick="setReaderMode('pdf')" id="modePdfBtn" class="py-2 bg-brand-600 text-white rounded-lg text-xs font-semibold text-center">PDF Page</button>
+                                        <button onclick="setReaderMode('epub')" id="modeEpubBtn" class="py-2 glass-card text-gray-300 hover:text-white rounded-lg text-xs font-semibold text-center">EPUB / Flow</button>
+                                        <button onclick="setReaderMode('kindle')" id="modeKindleBtn" class="py-2 glass-card text-gray-300 hover:text-white rounded-lg text-xs font-semibold text-center">Kindle Paper</button>
+                                    </div>
+                                </div>
+
+                                <div class="pt-4 space-y-2">
+                                    <button onclick="triggerExport('PDF')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg">
+                                        <i data-lucide="download" class="w-4 h-4"></i>
+                                        <span>Export Ready-to-Publish PDF</span>
+                                    </button>
+                                    <button onclick="triggerExport('EPUB')" class="w-full py-3 glass-card hover:bg-white/10 text-white font-semibold rounded-xl text-xs flex items-center justify-center gap-2">
+                                        <i data-lucide="file-text" class="w-4 h-4 text-brand-400"></i>
+                                        <span>Export Reflowable EPUB3</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Page Simulator -->
+                            <div class="lg:col-span-8">
+                                <div id="readerViewport" class="bg-white text-gray-900 rounded-2xl p-6 sm:p-8 min-h-[380px] shadow-2xl relative font-serif text-sm leading-relaxed border border-gray-200">
+                                    <div class="flex items-center justify-between border-b border-gray-200 pb-3 mb-4 font-sans text-xs text-gray-500">
+                                        <span>Chapter 1: The AI Paradigm Shift</span>
+                                        <span>Page 12 of 142</span>
+                                    </div>
+                                    <h3 class="text-2xl font-bold font-sans text-gray-900 mb-4" id="readerChapterTitle">Chapter 1: The AI Paradigm Shift</h3>
+                                    <p class="mb-4 text-gray-700">
+                                        Prompt engineering is no longer just about appending "act as an expert" to a basic query. In modern software architecture, prompts function as deterministic program instructions guiding neural reasoning engines.
+                                    </p>
+                                    <blockquote class="border-l-4 border-indigo-600 pl-4 italic text-gray-600 my-4 py-1 bg-indigo-50/50 rounded-r">
+                                        "The quality of your software output in the AI era is directly bounded by the precision of your context specification."
+                                    </blockquote>
+                                    <p class="text-gray-700">
+                                        When designing structured workflows, developers must consider temperature parameters, zero-shot vs few-shot exemplars, and context window optimization strategies.
+                                    </p>
+                                    
+                                    <div class="absolute bottom-4 right-6 text-xs font-sans text-gray-400 flex items-center gap-2">
+                                        <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                                        <span>Simulated Page Layout</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="pt-4 flex justify-between items-center border-t border-gray-800">
+                            <button onclick="switchDemoStep(3)" class="text-xs font-semibold text-gray-400 hover:text-white">
+                                &larr; Back to Cover Studio
+                            </button>
+                            <a href="#pricing" class="gradient-bg text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2">
+                                <span>Unlock Full Platform Access</span>
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEMPLATE SHOWCASE SECTION -->
+    <section id="templates" class="py-20 bg-dark-card/30 border-y border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold">
+                    <i data-lucide="layout-template" class="w-3.5 h-3.5"></i> Curated Layout Library
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+                    Designer Templates for Every Genre
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base">
+                    Choose from over 50+ pre-formatted layouts engineered for readability and high conversion rates.
+                </p>
+
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-4">
+                    <button onclick="filterTemplates('all')" class="tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 text-white">All Templates</button>
+                    <button onclick="filterTemplates('business')" class="tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-card text-gray-300 hover:text-white">Business &amp; Finance</button>
+                    <button onclick="filterTemplates('tech')" class="tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-card text-gray-300 hover:text-white">Tech Whitepapers</button>
+                    <button onclick="filterTemplates('recipe')" class="tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-card text-gray-300 hover:text-white">Cookbooks</button>
+                    <button onclick="filterTemplates('fiction')" class="tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-card text-gray-300 hover:text-white">Fiction &amp; Novels</button>
+                </div>
+            </div>
+
+            <!-- Templates Grid -->
+            <div id="templatesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Template Card 1 -->
+                <div class="template-card glass-card rounded-2xl p-4 border border-gray-800 flex flex-col justify-between group" data-category="tech">
+                    <div>
+                        <div class="h-48 rounded-xl bg-gradient-to-br from-slate-900 to-indigo-950 p-4 border border-indigo-500/20 relative overflow-hidden flex flex-col justify-between mb-4">
+                            <span class="text-[10px] font-mono text-indigo-400 uppercase tracking-wider">Tech Blueprint</span>
+                            <div>
+                                <p class="text-sm font-extrabold text-white">Microservices Architecture 2026</p>
+                                <p class="text-xs text-gray-400">Technical Handbook</p>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-brand-400 transition-colors">Developer Whitepaper Kit</h3>
+                        <p class="text-xs text-gray-400 mt-1">Code blocks highlighting, clean sans-serif layout, diagram placeholders.</p>
+                    </div>
+                    <button onclick="previewTemplateModal('Developer Whitepaper Kit', 'Tech & Software', 'Code blocks, dark mode compatible, modern monospace headers')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i> Quick Preview
+                    </button>
+                </div>
+
+                <!-- Template Card 2 -->
+                <div class="template-card glass-card rounded-2xl p-4 border border-gray-800 flex flex-col justify-between group" data-category="business">
+                    <div>
+                        <div class="h-48 rounded-xl bg-gradient-to-br from-indigo-900 to-purple-950 p-4 border border-purple-500/20 relative overflow-hidden flex flex-col justify-between mb-4">
+                            <span class="text-[10px] font-mono text-purple-300 uppercase tracking-wider">SaaS Playbook</span>
+                            <div>
+                                <p class="text-sm font-extrabold text-white">Zero to $1M ARR Playbook</p>
+                                <p class="text-xs text-indigo-200">Growth Guide</p>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-brand-400 transition-colors">Executive Growth Playbook</h3>
+                        <p class="text-xs text-gray-400 mt-1">Metrics charts, highlighted callouts, quote callouts, high lead-gen conversion.</p>
+                    </div>
+                    <button onclick="previewTemplateModal('Executive Growth Playbook', 'Business & Growth', 'Chart callouts, key takeaway badges, metric highlights')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i> Quick Preview
+                    </button>
+                </div>
+
+                <!-- Template Card 3 -->
+                <div class="template-card glass-card rounded-2xl p-4 border border-gray-800 flex flex-col justify-between group" data-category="recipe">
+                    <div>
+                        <div class="h-48 rounded-xl bg-gradient-to-br from-emerald-950 to-teal-900 p-4 border border-emerald-500/20 relative overflow-hidden flex flex-col justify-between mb-4">
+                            <span class="text-[10px] font-mono text-emerald-300 uppercase tracking-wider">Culinary Arts</span>
+                            <div>
+                                <p class="text-sm font-extrabold text-white">Artisanal Sourdough Masterclass</p>
+                                <p class="text-xs text-emerald-200">Illustrated Recipes</p>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-brand-400 transition-colors">Artisanal Culinary Cookbook</h3>
+                        <p class="text-xs text-gray-400 mt-1">Multi-column ingredient lists, prep timer badges, step-by-step photography spots.</p>
+                    </div>
+                    <button onclick="previewTemplateModal('Artisanal Culinary Cookbook', 'Cookbooks & Lifestyle', 'Ingredient tables, step numbers, photo gallery slots')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i> Quick Preview
+                    </button>
+                </div>
+
+                <!-- Template Card 4 -->
+                <div class="template-card glass-card rounded-2xl p-4 border border-gray-800 flex flex-col justify-between group" data-category="fiction">
+                    <div>
+                        <div class="h-48 rounded-xl bg-gradient-to-br from-stone-900 to-amber-950 p-4 border border-amber-500/20 relative overflow-hidden flex flex-col justify-between mb-4">
+                            <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider">Classic Literature</span>
+                            <div>
+                                <p class="text-sm font-extrabold text-white">Echoes of the Void</p>
+                                <p class="text-xs text-amber-200">Sci-Fi Novel</p>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-brand-400 transition-colors">Novel &amp; Fiction Classic</h3>
+                        <p class="text-xs text-gray-400 mt-1">Drop-caps headers, elegant serif typography, print-ready margin spacing.</p>
+                    </div>
+                    <button onclick="previewTemplateModal('Novel & Fiction Classic', 'Fiction & Creative', 'Drop-cap initial letters, classic chapter headers, standard book margins')" class="mt-4 w-full py-2 bg-gray-800 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="eye" class="w-3.5 h-3.5"></i> Quick Preview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES GRID SECTION -->
+    <section id="features" class="py-20 md:py-28 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i> Platform Capabilities
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                    Everything You Need to <br><span class="gradient-text">Publish &amp; Monetize</span>
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base">
+                    From raw concept to published author in hours, not months.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400">
+                        <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">AI Context Copilot</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Generates non-repetitive, deeply researched chapters tailored specifically to your target reader persona and desired tone of voice.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-accent-violet/10 border border-accent-violet/30 flex items-center justify-center text-accent-violet">
+                        <i data-lucide="palette" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Automated Layout Engine</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Never fight with Microsoft Word margins again. Auto-formats orphan headings, page numbers, table of contents, and image placement.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-accent-emerald/10 border border-accent-emerald/30 flex items-center justify-center text-accent-emerald">
+                        <i data-lucide="file-up" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Multi-Format Publishing</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        One-click export directly to Amazon Kindle (.kpf), EPUB3 for Apple Books &amp; Kobo, and print-ready vector PDF for physical books.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-accent-rose/10 border border-accent-rose/30 flex items-center justify-center text-accent-rose">
+                        <i data-lucide="magnet" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Lead Magnet Funnels</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Automatically generates a high-converting landing page for your free eBook to capture email leads directly into your ESP.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Readership Analytics</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Track reader completion rates, popular chapters, and drop-off points with integrated digital reader telemetry.
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">100% Commercial Rights</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        You maintain full copyright over all generated text, layouts, and cover images. Sell anywhere with 0% royalty fees to us.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING & INTERACTIVE CALCULATOR SECTION -->
+    <section id="pricing" class="py-20 md:py-28 relative bg-dark-card/40 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 text-xs font-semibold">
+                    <i data-lucide="credit-card" class="w-3.5 h-3.5"></i> Simple Transparent Pricing
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                    Invest in Your <span class="gradient-text">Publishing Empire</span>
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base">
+                    Start free, scale as your catalogue grows. Cancel anytime.
+                </p>
+
+                <!-- Billing Toggle -->
+                <div class="flex items-center justify-center gap-4 pt-4">
+                    <span class="text-sm font-medium text-gray-400" id="monthlyLabel">Monthly</span>
+                    <button id="billingToggle" onclick="toggleBilling()" class="w-14 h-8 bg-brand-600 rounded-full p-1 transition-colors relative focus:outline-none">
+                        <div id="toggleDot" class="w-6 h-6 bg-white rounded-full transition-transform transform translate-x-6"></div>
+                    </button>
+                    <span class="text-sm font-medium text-white flex items-center gap-1.5">
+                        <span>Annual Billing</span>
+                        <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Save 20%</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dynamic Output Slider Widget -->
+            <div class="glass-panel max-w-2xl mx-auto p-6 rounded-2xl border border-gray-700 space-y-4 text-center">
+                <div class="flex justify-between items-center text-xs font-semibold text-gray-300">
+                    <span>How many eBooks do you plan to publish per month?</span>
+                    <span id="sliderValueText" class="text-brand-400 font-bold text-sm">3 eBooks / mo</span>
+                </div>
+                <input type="range" id="ebookSlider" min="1" max="20" value="3" oninput="updatePricingCalculator()" class="w-full accent-indigo-500 bg-gray-700 h-2 rounded-lg cursor-pointer">
+                <div class="flex justify-between text-[11px] text-gray-500 font-mono">
+                    <span>1 Solo Creator</span>
+                    <span>10 Agency</span>
+                    <span>20 Publisher Pro</span>
+                </div>
+                <p id="calculatorRecommendation" class="text-xs text-indigo-300 font-medium bg-brand-500/10 py-2 px-3 rounded-lg">
+                    Recommended Plan: <span class="font-bold text-white">Pro Author</span> — Save approx 24 hours of drafting per month!
+                </p>
+            </div>
+
+            <!-- Pricing Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+                
+                <!-- Starter Tier -->
+                <div class="glass-card rounded-3xl p-8 border border-gray-800 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <span class="text-xs font-mono uppercase text-gray-400 tracking-wider">Starter</span>
+                        <h3 class="text-2xl font-bold text-white">Solo Writer</h3>
+                        <p class="text-xs text-gray-400">Perfect for lead magnets &amp; first-time eBook creators.</p>
+                        
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-extrabold text-white price-starter">$19</span>
+                            <span class="text-xs text-gray-400 font-medium">/ month</span>
+                        </div>
+
+                        <ul class="space-y-3 pt-4 text-xs text-gray-300 border-t border-gray-800">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>2 eBooks per month</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>PDF Export Format</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>5 Preset Cover Themes</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-gray-500">
+                                <i data-lucide="x" class="w-4 h-4 text-gray-600"></i>
+                                <span>EPUB &amp; Kindle Exports</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal('signupModal')" class="w-full py-3 glass-card hover:bg-white/10 text-white font-semibold rounded-xl text-xs transition-colors">
+                        Start 7-Day Free Trial
+                    </button>
+                </div>
+
+                <!-- Pro Tier (Popular) -->
+                <div class="glass-panel rounded-3xl p-8 border-2 border-brand-500/80 flex flex-col justify-between space-y-6 relative shadow-2xl shadow-indigo-500/10">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-600 text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full shadow-md">
+                        Most Popular
+                    </div>
+
+                    <div class="space-y-4">
+                        <span class="text-xs font-mono uppercase text-brand-400 tracking-wider">Pro Author</span>
+                        <h3 class="text-2xl font-bold text-white">Pro Author</h3>
+                        <p class="text-xs text-gray-400">For serious authors, marketers, and info-publishers.</p>
+                        
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-extrabold text-white price-pro">$49</span>
+                            <span class="text-xs text-gray-400 font-medium">/ month</span>
+                        </div>
+
+                        <ul class="space-y-3 pt-4 text-xs text-gray-300 border-t border-gray-800">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>10 eBooks per month</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>PDF, EPUB &amp; Kindle Formats</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>Custom Cover Designer Studio</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>Lead Magnet Landing Page Creator</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal('signupModal')" class="w-full py-3 gradient-bg text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-500/30 hover:opacity-95 transition-all">
+                        Get Started Pro
+                    </button>
+                </div>
+
+                <!-- Agency Tier -->
+                <div class="glass-card rounded-3xl p-8 border border-gray-800 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <span class="text-xs font-mono uppercase text-gray-400 tracking-wider">Unlimited</span>
+                        <h3 class="text-2xl font-bold text-white">Agency &amp; Studio</h3>
+                        <p class="text-xs text-gray-400">For publishing agencies and high-volume content teams.</p>
+                        
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-extrabold text-white price-agency">$129</span>
+                            <span class="text-xs text-gray-400 font-medium">/ month</span>
+                        </div>
+
+                        <ul class="space-y-3 pt-4 text-xs text-gray-300 border-t border-gray-800">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>Unlimited eBooks</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>All Export Formats + Custom Fonts</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>Team Workspace (5 Seats)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                                <span>API Access &amp; Webhooks</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal('signupModal')" class="w-full py-3 glass-card hover:bg-white/10 text-white font-semibold rounded-xl text-xs transition-colors">
+                        Contact Agency Sales
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF & TESTIMONIALS SECTION -->
+    <section class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div class="text-center max-w-2xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold">
+                    <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> Author Success Stories
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+                    Loved by Over <span class="gradient-text-alt">15,000+ Creators</span>
+                </h2>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex text-amber-400 gap-1">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed italic">
+                            "I created a 120-page tech guide in under 3 hours using eBookCraft AI. It went on to generate over $18,000 in sales on Gumroad during launch month."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-gray-800/60">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white text-xs">
+                            DR
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white">David Ross</p>
+                            <p class="text-[10px] text-gray-400">Software Architect &amp; Author</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex text-amber-400 gap-1">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed italic">
+                            "The automatic EPUB &amp; Kindle formatting saved us hundreds of dollars in freelancer fees per book. This platform is a non-negotiable tool for our agency."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-gray-800/60">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center font-bold text-white text-xs">
+                            SL
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white">Sarah Lin</p>
+                            <p class="text-[10px] text-gray-400">Growth Lead @ ContentPulse</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex text-amber-400 gap-1">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed italic">
+                            "Our lead magnet conversions doubled after switching our PDF designs to eBookCraft AI's modern templates. It looks like a high-end designer made it."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-gray-800/60">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center font-bold text-white text-xs">
+                            MC
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white">Marcus Chen</p>
+                            <p class="text-[10px] text-gray-400">Founder, Solopreneur Academy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faqs" class="py-20 bg-dark-card/30 border-t border-gray-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="text-center space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 text-xs font-semibold">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Frequently Asked Questions
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+                    Got Questions? We Have Answers.
+                </h2>
+            </div>
+
+            <!-- FAQ Search Bar -->
+            <div class="relative">
+                <i data-lucide="search" class="w-5 h-5 absolute left-4 top-3.5 text-gray-500"></i>
+                <input type="text" id="faqSearch" onkeyup="filterFaqs()" placeholder="Search FAQs (e.g. copyright, EPUB, limits)..." class="w-full bg-dark-card border border-gray-700 rounded-xl pl-12 pr-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500">
+            </div>
+
+            <!-- Accordion Items -->
+            <div class="space-y-4" id="faqList">
+                
+                <div class="faq-item glass-card rounded-2xl border border-gray-800 overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center text-sm font-bold text-white hover:text-brand-400 transition-colors">
+                        <span>Do I own full commercial rights to the eBooks generated?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden px-6 pb-4 text-xs text-gray-400 leading-relaxed border-t border-gray-800/40 pt-3">
+                        Yes, 100%! You hold full ownership and commercial rights to all text, designs, covers, and exported files created using eBookCraft AI. You can publish them on Amazon KDP, Gumroad, your own website, or sell them to clients without paying royalties.
+                    </div>
+                </div>
+
+                <div class="faq-item glass-card rounded-2xl border border-gray-800 overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center text-sm font-bold text-white hover:text-brand-400 transition-colors">
+                        <span>Will my eBook pass Amazon Kindle KDP formatting requirements?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden px-6 pb-4 text-xs text-gray-400 leading-relaxed border-t border-gray-800/40 pt-3">
+                        Absolutely. Our EPUB and Kindle exports are strictly validated against Amazon KDP and Apple Books formatting guidelines to ensure seamless uploading without margin or font errors.
+                    </div>
+                </div>
+
+                <div class="faq-item glass-card rounded-2xl border border-gray-800 overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center text-sm font-bold text-white hover:text-brand-400 transition-colors">
+                        <span>Is the generated content unique and original?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden px-6 pb-4 text-xs text-gray-400 leading-relaxed border-t border-gray-800/40 pt-3">
+                        Yes. Our AI engine generates original, contextual copy based on your specific prompts, outline, and audience requirements. We also include built-in plagiarism checks prior to export.
+                    </div>
+                </div>
+
+                <div class="faq-item glass-card rounded-2xl border border-gray-800 overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center text-sm font-bold text-white hover:text-brand-400 transition-colors">
+                        <span>Can I edit and customize the content after AI generation?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden px-6 pb-4 text-xs text-gray-400 leading-relaxed border-t border-gray-800/40 pt-3">
+                        Yes! You have full control with our rich block editor. You can rewrite chapters, reorder outlines, insert custom images, add callout boxes, and re-style covers anytime.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION BANNER -->
+    <section class="py-20 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl p-8 sm:p-14 border border-brand-500/40 relative overflow-hidden text-center space-y-6">
+                <!-- Background Gradient Accent -->
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-brand-600/30 rounded-full blur-3xl pointer-events-none"></div>
+
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                    Ready to Publish Your First <br><span class="gradient-text">AI eBook Today?</span>
+                </h2>
+                <p class="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
+                    Join 15,000+ creators and businesses building authority and driving leads with eBookCraft AI.
+                </p>
+
+                <!-- Signup Lead Form -->
+                <form onsubmit="handleCtaSubmit(event)" class="max-w-md mx-auto flex flex-col sm:flex-row gap-2 pt-2">
+                    <input type="email" required placeholder="Enter your work email..." class="bg-dark-card border border-gray-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500 grow">
+                    <button type="submit" class="gradient-bg text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg shadow-indigo-500/30 hover:opacity-95 transition-all shrink-0">
+                        Start Free Trial
+                    </button>
+                </form>
+
+                <p class="text-[11px] text-gray-500">7-day free trial • No credit card required • Cancel anytime</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-800 bg-dark-bg/90 text-gray-400 py-12 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <!-- Brand Info -->
+                <div class="col-span-2 space-y-4">
+                    <a href="#" class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white">
+                            <i data-lucide="book-open-check" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-lg font-bold text-white">eBookCraft<span class="gradient-text">.AI</span></span>
+                    </a>
+                    <p class="text-gray-500 max-w-sm leading-relaxed">
+                        The all-in-one AI publishing engine for authors, creators, marketers, and digital agencies.
+                    </p>
+                    <div class="flex gap-4 text-gray-500">
+                        <a href="#" class="hover:text-white transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                        <a href="#" class="hover:text-white transition-colors"><i data-lucide="github" class="w-4 h-4"></i></a>
+                        <a href="#" class="hover:text-white transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 1 -->
+                <div class="space-y-3">
+                    <p class="text-white font-semibold uppercase text-[10px] tracking-wider">Product</p>
+                    <ul class="space-y-2">
+                        <li><a href="#demo" class="hover:text-white transition-colors">AI Outline Generator</a></li>
+                        <li><a href="#demo" class="hover:text-white transition-colors">Cover Studio</a></li>
+                        <li><a href="#demo" class="hover:text-white transition-colors">Kindle Exporter</a></li>
+                        <li><a href="#templates" class="hover:text-white transition-colors">Templates Library</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="space-y-3">
+                    <p class="text-white font-semibold uppercase text-[10px] tracking-wider">Resources</p>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">KDP Publishing Guide</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Lead Magnet Playbook</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Affiliate Program</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="space-y-3">
+                    <p class="text-white font-semibold uppercase text-[10px] tracking-wider">Legal &amp; Trust</p>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Commercial License</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Security Overview</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800/80 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-gray-500">
+                <p>&copy; 2026 eBookCraft AI, Inc. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <span>Status: <span class="text-emerald-400 font-semibold">All Systems Operational</span></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- Template Modal -->
+    <div id="templateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel max-w-lg w-full rounded-2xl p-6 border border-gray-700 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white" id="modalTmplTitle">Template Details</h3>
+                <button onclick="closeModal('templateModal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="bg-dark-card rounded-xl p-4 border border-gray-800 space-y-2 text-xs">
+                <p class="text-gray-400">Category: <span id="modalTmplCat" class="text-brand-400 font-bold"></span></p>
+                <p class="text-gray-300" id="modalTmplDesc"></p>
+            </div>
+            <div class="pt-2 flex justify-end gap-2">
+                <button onclick="closeModal('templateModal')" class="px-4 py-2 glass-card text-xs font-semibold rounded-lg text-gray-300">Close</button>
+                <a href="#demo" onclick="closeModal('templateModal')" class="px-4 py-2 gradient-bg text-xs font-bold rounded-lg text-white">Use This Template</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Auth Modal -->
+    <div id="signupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full rounded-2xl p-6 border border-gray-700 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Start Your 7-Day Free Trial</h3>
+                <button onclick="closeModal('signupModal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="space-y-3">
+                <input type="text" placeholder="Full Name" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                <input type="email" placeholder="Email Address" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                <input type="password" placeholder="Create Password" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                <button onclick="alert('Account created! Redirecting to studio workspace...')" class="w-full py-2.5 gradient-bg text-white text-xs font-bold rounded-lg shadow-lg">
+                    Create Account &amp; Start
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full rounded-2xl p-6 border border-gray-700 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Sign In to eBookCraft AI</h3>
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="space-y-3">
+                <input type="email" placeholder="Email Address" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                <input type="password" placeholder="Password" class="w-full bg-dark-card border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                <button onclick="alert('Signed in! Welcome back.')" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-lg shadow-lg">
+                    Sign In
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // State variables
+        let isAnnual = false;
+        let activeDemoStep = 1;
+        let demoChapters = [
+            "Chapter 1: The AI Paradigm Shift in Software Development",
+            "Chapter 2: Foundations of Precision Prompt Design",
+            "Chapter 3: Few-Shot Exemplars & Context Window Management",
+            "Chapter 4: Building Autonomous RAG Knowledge Pipelines",
+            "Chapter 5: Multi-Modal AI & Visual Prompting",
+            "Chapter 6: Guardrails, Safety & Deterministic Output Control",
+            "Chapter 7: Monetizing AI Tools & Publishing Your Stack"
+        ];
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Quick simulation for Hero Prompt
+        function quickGenerateHero() {
+            const output = document.getElementById('heroStreamOutput');
+            const promptVal = document.getElementById('heroPromptInput').value;
+            output.innerHTML += `<p class="text-amber-400">&gt; Re-analyzing prompt: "${promptVal.substring(0, 30)}..."</p>`;
+            output.innerHTML += `<p class="text-emerald-300">&gt; Generative pipeline complete! Ready in studio.</p>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Demo Step Switcher
+        function switchDemoStep(stepNum) {
+            activeDemoStep = stepNum;
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`stepBtn${i}`);
+                const panel = document.getElementById(`demoStep${i}`);
+                if (i === stepNum) {
+                    btn.classList.add('active');
+                    btn.classList.remove('text-gray-400');
+                    panel.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-gray-400');
+                    panel.classList.add('hidden');
+                }
+            }
+        }
+
+        function generateOutlineFromStep1() {
+            const title = document.getElementById('demoTitle').value;
+            document.getElementById('coverTitleInput').value = title;
+            updateCoverPreview();
+            renderChaptersList();
+            switchDemoStep(2);
+        }
+
+        function renderChaptersList() {
+            const container = document.getElementById('chaptersList');
+            container.innerHTML = '';
+            demoChapters.forEach((chap, idx) => {
+                const row = document.createElement('div');
+                row.className = "flex items-center gap-3 bg-dark-card p-3 rounded-xl border border-gray-800 text-xs";
+                row.innerHTML = `
+                    <i data-lucide="grip-vertical" class="w-4 h-4 text-gray-500 cursor-move shrink-0"></i>
+                    <input type="text" value="${chap}" onchange="updateChapterTitle(${idx}, this.value)" class="bg-transparent text-gray-200 focus:outline-none w-full font-medium">
+                    <button onclick="removeChapterRow(${idx})" class="text-gray-500 hover:text-rose-400 p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                `;
+                container.appendChild(row);
+            });
+            lucide.createIcons();
+        }
+
+        function updateChapterTitle(idx, val) {
+            demoChapters[idx] = val;
+            if(idx === 0) {
+                document.getElementById('readerChapterTitle').innerText = val;
+            }
+        }
+
+        function removeChapterRow(idx) {
+            demoChapters.splice(idx, 1);
+            renderChaptersList();
+        }
+
+        function addChapterRow() {
+            demoChapters.push(`Chapter ${demoChapters.length + 1}: Custom AI Strategy & Best Practices`);
+            renderChaptersList();
+        }
+
+        // Cover Customizer Functions
+        function updateCoverPreview() {
+            const title = document.getElementById('coverTitleInput').value || "Mastering Prompt Engineering";
+            const author = document.getElementById('coverAuthorInput').value || "Alex Rivera";
+            const gradient = document.getElementById('coverGradientSelect').value;
+            const font = document.getElementById('coverFontSelect').value;
+
+            document.getElementById('previewCoverTitle').innerText = title;
+            document.getElementById('previewCoverAuthor').innerText = author;
+
+            const box = document.getElementById('coverBox');
+            box.className = `w-64 h-96 rounded-r-2xl rounded-l-md bg-gradient-to-br ${gradient} p-6 flex flex-col justify-between shadow-2xl relative border-l-4 border-indigo-300/40 transition-all transform hover:rotate-1`;
+            document.getElementById('previewCoverTitle').className = `text-xl font-extrabold text-white leading-tight ${font}`;
+        }
+
+        function applyCoverPreset(theme) {
+            if (theme === 'tech') {
+                document.getElementById('coverGradientSelect').value = 'from-indigo-600 to-purple-800';
+                document.getElementById('coverFontSelect').value = 'font-sans';
+            } else if (theme === 'minimal') {
+                document.getElementById('coverGradientSelect').value = 'from-slate-900 to-black';
+                document.getElementById('coverFontSelect').value = 'font-mono';
+            } else if (theme === 'bold') {
+                document.getElementById('coverGradientSelect').value = 'from-rose-600 to-amber-700';
+                document.getElementById('coverFontSelect').value = 'font-serif';
+            }
+            updateCoverPreview();
+        }
+
+        // Reader Viewport simulator
+        function setReaderMode(mode) {
+            const viewport = document.getElementById('readerViewport');
+            const pdfBtn = document.getElementById('modePdfBtn');
+            const epubBtn = document.getElementById('modeEpubBtn');
+            const kindleBtn = document.getElementById('modeKindleBtn');
+
+            [pdfBtn, epubBtn, kindleBtn].forEach(b => {
+                b.className = "py-2 glass-card text-gray-300 hover:text-white rounded-lg text-xs font-semibold text-center";
+            });
+
+            if (mode === 'pdf') {
+                pdfBtn.className = "py-2 bg-brand-600 text-white rounded-lg text-xs font-semibold text-center";
+                viewport.className = "bg-white text-gray-900 rounded-2xl p-6 sm:p-8 min-h-[380px] shadow-2xl relative font-serif text-sm leading-relaxed border border-gray-200";
+            } else if (mode === 'epub') {
+                epubBtn.className = "py-2 bg-brand-600 text-white rounded-lg text-xs font-semibold text-center";
+                viewport.className = "bg-slate-900 text-gray-100 rounded-2xl p-6 sm:p-8 min-h-[380px] shadow-2xl relative font-sans text-sm leading-relaxed border border-gray-800";
+            } else if (mode === 'kindle') {
+                kindleBtn.className = "py-2 bg-brand-600 text-white rounded-lg text-xs font-semibold text-center";
+                viewport.className = "bg-amber-50 text-amber-950 rounded-2xl p-6 sm:p-8 min-h-[380px] shadow-2xl relative font-serif text-sm leading-relaxed border border-amber-200";
+            }
+        }
+
+        function triggerExport(format) {
+            alert(`Generating ${format} package for "${document.getElementById('previewCoverTitle').innerText}"...\nDownload will start automatically.`);
+        }
+
+        // Template Filtering
+        function filterTemplates(cat) {
+            const cards = document.querySelectorAll('.template-card');
+            cards.forEach(card => {
+                if (cat === 'all' || card.dataset.category === cat) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            const btns = document.querySelectorAll('.tmpl-filter-btn');
+            btns.forEach(btn => {
+                btn.className = "tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold glass-card text-gray-300 hover:text-white";
+            });
+            event.target.className = "tmpl-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 text-white";
+        }
+
+        function previewTemplateModal(title, category, desc) {
+            document.getElementById('modalTmplTitle').innerText = title;
+            document.getElementById('modalTmplCat').innerText = category;
+            document.getElementById('modalTmplDesc').innerText = `Included features: ${desc}`;
+            openModal('templateModal');
+        }
+
+        // Pricing Billing Toggle Logic
+        function toggleBilling() {
+            isAnnual = !isAnnual;
+            const dot = document.getElementById('toggleDot');
+            if (isAnnual) {
+                dot.classList.add('translate-x-0');
+                dot.classList.remove('translate-x-6');
+                document.querySelector('.price-starter').innerText = '$15';
+                document.querySelector('.price-pro').innerText = '$39';
+                document.querySelector('.price-agency').innerText = '$99';
+            } else {
+                dot.classList.add('translate-x-6');
+                dot.classList.remove('translate-x-0');
+                document.querySelector('.price-starter').innerText = '$19';
+                document.querySelector('.price-pro').innerText = '$49';
+                document.querySelector('.price-agency').innerText = '$129';
+            }
+        }
+
+        // Slider Calculator Update
+        function updatePricingCalculator() {
+            const val = document.getElementById('ebookSlider').value;
+            document.getElementById('sliderValueText').innerText = `${val} eBook${val > 1 ? 's' : ''} / mo`;
+            const rec = document.getElementById('calculatorRecommendation');
+
+            if (val <= 2) {
+                rec.innerHTML = `Recommended Plan: <span class="font-bold text-white">Starter</span> — Save approx 12 hours of drafting per month!`;
+            } else if (val <= 10) {
+                rec.innerHTML = `Recommended Plan: <span class="font-bold text-white">Pro Author</span> — Save approx 50 hours of drafting per month!`;
+            } else {
+                rec.innerHTML = `Recommended Plan: <span class="font-bold text-white">Agency &amp; Studio</span> — Save approx 150+ hours of drafting per month!`;
+            }
+        }
+
+        // FAQ Accordion
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            answer.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function filterFaqs() {
+            const query = document.getElementById('faqSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.faq-item');
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Modal Helpers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        function handleCtaSubmit(e) {
+            e.preventDefault();
+            alert('Thank you! Redirecting to setup your free trial workspace...');
+        }
+
+        // Initialize default view
+        renderChaptersList();
+        updateCoverPreview();
+    </script>
+</body>
+</html>
